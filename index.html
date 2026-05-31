@@ -1052,7 +1052,7 @@
     }
 
     /* MOBILE RESPONSIVE */
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
       /* General Typography floor handled below by global regex */
       
       /* Tap targets */
@@ -1061,17 +1061,25 @@
       }
       
       .pill-nav {
-        padding: 12px 12px;
+        padding: 12px 10px;
         width: calc(100% - 24px);
+      }
+      .nav-left {
+        gap: 8px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
       .nav-tag {
         display: none;
       }
       .wordmark {
         font-size: 13px;
+        letter-spacing: 0.08em;
       }
       .cta-button {
-        padding: 8px 14px;
+        font-size: 11px;
+        padding: 7px 12px;
       }
       
       .section-1 {
@@ -1123,27 +1131,24 @@
       }
       
       .dashboard-wrapper {
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        perspective: none;
+        overflow: hidden;
       }
-      .dashboard-wrapper::-webkit-scrollbar {
-        display: none;
-      }
+      
       .dashboard-mockup {
-        transform: none !important;
+        transform: scale(0.65) !important;
+        transform-origin: top center;
+        margin-bottom: -160px;
         border-radius: 4px;
         min-width: 600px;
       }
       .dashboard-mockup.reveal {
-        transform: translateY(28px) !important;
+        transform: scale(0.65) translateY(28px) !important;
       }
       .dashboard-mockup.reveal.active {
-        transform: translateY(0) !important;
+        transform: scale(0.65) translateY(0) !important;
       }
       .dashboard-mockup.reveal.active:hover {
-        transform: none !important;
+        transform: scale(0.65) !important;
       }
 
       .dash-caption {
@@ -1210,12 +1215,29 @@
         pointer-events: auto;
       }
     }
-    @media (max-width: 479px) {
-      .pill-nav {
-        padding-left: 12px;
-        padding-right: 12px;
+
+    @media (max-width: 480px) {
+      .dashboard-mockup {
+        transform: scale(0.55) !important;
+        margin-bottom: -220px !important;
+      }
+      .dashboard-mockup.reveal {
+        transform: scale(0.55) translateY(28px) !important;
+      }
+      .dashboard-mockup.reveal.active {
+        transform: scale(0.55) translateY(0) !important;
+      }
+      .dashboard-mockup.reveal.active:hover {
+        transform: scale(0.55) !important;
       }
     }
+
+    @media (max-width: 400px) {
+      .wordmark span {
+        display: none;
+      }
+    }
+
   </style>
 </head>
 <body>
