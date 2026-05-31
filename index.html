@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eccentric Systems · Built for Swift Consult</title>
+  <meta name="description" content="A personal proposal from Eccentric Systems for Sadiq Manzo of Swift Consult. The content system, website, and automation infrastructure we are building together.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+<style>
+    :root {
+      --base-bg: #060806;
+      --surface: #0a0f0a;
+      --card: #0e130e;
+      --border: #162018;
+      --light-border: #1e3020;
+      --primary-green: #2d6a35;
+      --dim-green: #1e5c28;
+      --deep-green: #1a4a20;
+      --faint-green: rgba(45, 106, 53, 0.10);
+      --green-glow: rgba(45, 106, 53, 0.06);
+      --gold: #c9a96e;
+      --dim-gold: #8a6f42;
+      --faint-gold: rgba(201, 169, 110, 0.08);
+      --white: #f0f5f0;
+      --text: #b8c4b8;
+      --muted: #4a5a4a;
+      --dim: #1e2e1e;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--base-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
+      padding: 0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .noise-texture {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+    }
+
+    /* TYPOGRAPHY UTILS */
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .font-mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* NAVIGATION */
+    .pill-nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 96px);
+      max-width: 960px;
+      background-color: rgba(6, 8, 6, 0.85);
+      border: 1px solid var(--light-border);
+      border-radius: 100px;
+      padding: 12px 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-ring {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(201, 169, 110, 0.6);
+      border-radius: 50%;
+      padding: 6px;
+      box-shadow: 0 0 8px rgba(201, 169, 110, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--primary-green);
+    }
+    .wordmark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .wordmark span {
+      color: var(--gold);
+    }
+    .nav-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--primary-green);
+      background-color: var(--faint-green);
+      border: 1px solid rgba(45, 106, 53, 0.3);
+      border-radius: 100px;
+      padding: 5px 14px;
+    }
+    .cta-button {
+      background-color: var(--white);
+      color: var(--base-bg);
+      border-radius: 100px;
+      padding: 10px 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+      white-space: nowrap;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cta-button:hover {
+      background-color: var(--gold);
+    }
+
+    /* SPACER */
+    .spacer-80 {
+      height: 80px;
+    }
+
+    /* SECTIONS */
+    .section-1 {
+      padding: 100px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-2 {
+      padding: 100px 60px 120px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* REVEAL ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.75s ease-out, transform 0.75s ease-out;
+    }
+
+    /* HERO CONTENT */
+    .personal-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--primary-green);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .personal-label::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+    }
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin: 0 0 24px 0;
+      max-width: 900px;
+    }
+    .hero-headline .name-highlight {
+      color: var(--gold);
+    }
+    .hero-subline {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.9;
+      margin: 0 0 64px 0;
+    }
+
+    /* OFFER BLOCKS */
+    .offers-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .offer-block {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 56px;
+      overflow: hidden;
+    }
+    .offer-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+    .block-1 {
+      background-color: var(--surface);
+      border-color: var(--light-border);
+    }
+    .block-1::before {
+      background: linear-gradient(90deg, transparent, var(--dim-gold), transparent);
+    }
+    .block-2, .block-3 {
+      background-color: var(--card);
+      padding: 40px;
+    }
+    .block-2::before, .block-3::before {
+      background: linear-gradient(90deg, transparent, var(--dim-green), transparent);
+    }
+    .offers-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .offer-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 5px 14px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .badge-gold {
+      background-color: var(--faint-gold);
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      color: var(--gold);
+    }
+    .badge-green {
+      background-color: var(--faint-green);
+      border: 1px solid rgba(45, 106, 53, 0.3);
+      color: var(--primary-green);
+    }
+    .offer-statement {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 18px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 640px;
+      margin: 0;
+    }
+    .block-2 .offer-statement, .block-3 .offer-statement {
+      font-size: 16px;
+      max-width: none;
+    }
+    .offer-statement strong {
+      color: var(--white);
+      font-weight: 300;
+    }
+    .offer-rule {
+      border: none;
+      height: 1px;
+      background-color: var(--border);
+      margin: 32px 0;
+    }
+    .deliverables {
+      display: grid;
+      gap: 12px;
+    }
+    .deliverables.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+    .deliverable-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .deliverable-item::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 4px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .offer-outcome {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 24px;
+    }
+    .offer-note {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 24px;
+    }
+
+    /* CTA BELOW OFFERS */
+    .cta-container {
+      margin-top: 64px;
+      text-align: center;
+    }
+    .text-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 18px;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .text-cta .arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      margin-left: 8px;
+    }
+    .text-cta:hover .arrow {
+      transform: translateX(8px);
+    }
+    .cta-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* SECTION DIVIDER */
+    .section-divider-wrap {
+      padding: 80px 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .divider-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: var(--border);
+      z-index: 1;
+    }
+    .divider-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background-color: var(--base-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ECCENTRIC SYSTEMS SECTION */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--primary-green);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+    }
+    .declaration-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      max-width: 900px;
+      margin: 0 0 48px 0;
+    }
+    .declaration-headline em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .declaration-p {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      color: var(--text);
+      max-width: 560px;
+      line-height: 1.9;
+      margin: 0 0 64px 0;
+    }
+
+    /* MODULE PANELS */
+    .module-panel {
+      position: relative;
+      background-color: var(--surface);
+      border: 1px solid var(--light-border);
+      border-radius: 4px;
+      padding: 56px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .module-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dim-gold), transparent);
+    }
+    .module-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--primary-green);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .module-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 28px;
+      color: var(--white);
+      line-height: 1.2;
+      margin: 0 0 40px 0;
+    }
+    .module-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .module-prose {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.9;
+      max-width: 480px;
+      margin: 0;
+    }
+    .module-deliverables {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-content: start;
+    }
+    .module-deliverable {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .module-deliverable::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 4px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .module-outcome {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* DASHBOARD MOCKUP */
+
+    /* MOCKUP STYLES */
+    .dashboard-mockup {
+      --mk-dark: #0D0D0F;
+      --mk-panel: #141418;
+      --mk-card: #1A1A20;
+      --mk-border: rgba(255, 255, 255, 0.08);
+      --mk-border-strong: rgba(255, 255, 255, 0.12);
+      --mk-text-pri: #E8E8EC;
+      --mk-text-sec: #6B6B78;
+      --mk-text-mut: #3A3A45;
+      background-color: var(--mk-dark);
+      border: 1px solid var(--light-border);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 900px;
+      margin: 0 auto;
+      transform-style: preserve-3d;
+      transform: rotateX(-4deg) rotateY(6deg);
+    }
+
+    .m-topbar {
+      height: 48px;
+      background-color: var(--mk-dark);
+      border-bottom: 1px solid var(--mk-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .m-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .m-logo {
+      height: 16px;
+      fill: var(--primary-green);
+    }
+    .m-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--mk-text-pri);
+    }
+    .m-dot {
+      color: var(--mk-text-mut);
+      font-size: 11px;
+    }
+    .m-subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--mk-text-sec);
+    }
+    .m-topbar-right {
+      display: flex;
+      gap: 6px;
+    }
+    .m-chrome-circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--mk-text-mut);
+    }
+    .m-chrome-circle:nth-child(1) { background-color: #FF5F57; }
+    .m-chrome-circle:nth-child(2) { background-color: #FEBC2E; }
+    .m-chrome-circle:nth-child(3) { background-color: #28C840; }
+    .m-body {
+      display: flex;
+    }
+    .m-sidebar {
+      width: 64px;
+      background-color: var(--mk-dark);
+      border-right: 1px solid var(--mk-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 16px;
+      gap: 8px;
+    }
+    .m-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    .m-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--mk-text-sec);
+    }
+    .m-icon.active {
+      background-color: rgba(45, 106, 53, 0.10);
+    }
+    .m-icon.active svg {
+      fill: var(--primary-green);
+    }
+
+    .m-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .m-metrics {
+      height: 72px;
+      display: flex;
+      background-color: var(--mk-panel);
+      border-bottom: 1px solid var(--mk-border);
+    }
+    .m-metric-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--mk-border);
+    }
+    .m-metric-block:last-child {
+      border-right: none;
+    }
+    .m-metric-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 22px;
+      color: var(--mk-text-pri);
+      line-height: 1.2;
+    }
+    .m-metric-val.gold {
+      color: var(--gold);
+    }
+    .m-metric-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--mk-text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .m-middle {
+      display: flex;
+    }
+    .m-panel-left {
+      width: 55%;
+      background-color: var(--mk-panel);
+      border-right: 1px solid var(--mk-border);
+      padding: 20px;
+    }
+    .m-panel-right {
+      width: 45%;
+      background-color: var(--mk-card);
+      padding: 20px;
+    }
+    .m-panel-header {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--mk-text-mut);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .m-camp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .m-camp-row:last-child {
+      border-bottom: none;
+    }
+    .m-camp-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--mk-text-pri);
+      width: 40%;
+    }
+    .m-camp-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      border-radius: 100px;
+      padding: 3px 10px;
+      text-align: center;
+    }
+    .m-camp-status.green {
+      background-color: rgba(45, 106, 53, 0.12);
+      border: 1px solid rgba(45, 106, 53, 0.3);
+      color: var(--primary-green);
+    }
+    .m-camp-status.gold {
+      background-color: rgba(201, 169, 110, 0.10);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      color: var(--gold);
+    }
+    .m-camp-stats {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 35%;
+      justify-content: flex-end;
+    }
+    .m-camp-reach {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--mk-text-sec);
+    }
+    .m-camp-cpa {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--gold);
+    }
+    .m-camp-cpa.dash {
+      color: var(--mk-text-mut);
+    }
+
+    .m-route-row {
+      display: flex;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .m-route-row:last-child {
+      border-bottom: none;
+    }
+    .m-route-src {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--mk-text-pri);
+      width: 35%;
+    }
+    .m-route-dest-wrap {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+    }
+    .m-route-dest {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+    .m-route-dest.green {
+      color: var(--primary-green);
+    }
+    .m-route-dest.gray {
+      color: var(--mk-text-mut);
+    }
+    .m-route-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--mk-text-sec);
+    }
+    .route-arrow {
+      flex: 1;
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.15);
+      margin: 0 16px;
+      position: relative;
+    }
+    .route-arrow::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 6px;
+      height: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      transform: rotate(45deg);
+    }
+
+    .m-segments {
+      height: 64px;
+      background-color: var(--mk-dark);
+      border-top: 1px solid var(--mk-border);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+    }
+    .m-seg-header {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--mk-text-sec);
+      width: 140px;
+    }
+    .m-seg-list {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .m-seg-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .m-seg-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .m-seg-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: var(--mk-text-pri);
+      margin-bottom: 2px;
+    }
+    .m-seg-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+    }
+    .m-seg-status.green {
+      color: var(--primary-green);
+    }
+    .m-seg-status.gold {
+      color: var(--gold);
+    }
+    .pulse-dot.green-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      animation: mk-pulse 2s infinite;
+      margin-top: 4px;
+    }
+    .static-dot.gold-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--gold);
+      border-radius: 50%;
+      margin-top: 4px;
+    }
+    @keyframes mk-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(45, 106, 53, 0.7); }
+      70% { box-shadow: 0 0 0 4px rgba(45, 106, 53, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(45, 106, 53, 0); }
+    }
+
+
+/* STORY PANELS / ROADMAP */
+    .dash-caption {
+      margin-top: 40px;
+    }
+    .roadmap-panel {
+      position: relative;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 56px;
+      margin-top: 80px;
+      overflow: hidden;
+    }
+    .roadmap-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dim-gold), transparent);
+    }
+    
+    .story-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .roadmap-label {
+      color: var(--gold);
+      letter-spacing: 0.18em;
+    }
+    
+    .story-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 22px;
+      color: var(--white);
+      margin: 0 0 40px 0;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 7px;
+      width: 1px;
+      background-color: rgba(45, 106, 53, 0.4);
+    }
+    .timeline-node {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .timeline-node:last-child { margin-bottom: 0; }
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: -24.5px;
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+    }
+    .node-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--primary-green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .node-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.8;
+      margin: 0;
+    }
+    .roadmap-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-left {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-right a {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .footer-right a:hover {
+      color: var(--text);
+    }
+
+    /* FLOATING WA BUTTON */
+    .floating-wa {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--green-glow);
+      z-index: 1000;
+      transition: opacity 0.4s ease, transform 0.25s ease;
+      color: var(--white);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .floating-wa svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+    .floating-wa:hover {
+      transform: scale(1.08);
+    }
+    .floating-wa.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 767px) {
+      /* General Typography floor handled below by global regex */
+      
+      /* Tap targets */
+      a, button, .cta-button, .text-cta {
+        min-height: 44px;
+      }
+      
+      .pill-nav {
+        padding: 12px 12px;
+        width: calc(100% - 24px);
+      }
+      .nav-tag {
+        display: none;
+      }
+      .wordmark {
+        font-size: 13px;
+      }
+      .cta-button {
+        padding: 8px 14px;
+      }
+      
+      .section-1 {
+        padding: 70px 24px;
+      }
+      .hero-headline {
+        font-size: 2rem;
+      }
+      .hero-subline {
+        font-size: 15px;
+      }
+      
+      .section-2 {
+        padding: 70px 24px 84px 24px;
+      }
+      
+      .offers-row {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+      }
+      .offers-grid {
+        display: flex;
+        flex-direction: column;
+      }
+      .offer-block {
+        width: 100%;
+        padding: 28px;
+        box-sizing: border-box;
+      }
+      .deliverables.two-col {
+        grid-template-columns: 1fr;
+      }
+      
+      .module-panel {
+        padding: 28px;
+      }
+      .module-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      .module-prose {
+        max-width: none;
+      }
+      .module-deliverables {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-wrapper {
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        perspective: none;
+      }
+      .dashboard-wrapper::-webkit-scrollbar {
+        display: none;
+      }
+      .dashboard-mockup {
+        transform: none !important;
+        border-radius: 4px;
+        min-width: 600px;
+      }
+      .dashboard-mockup.reveal {
+        transform: translateY(28px) !important;
+      }
+      .dashboard-mockup.reveal.active {
+        transform: translateY(0) !important;
+      }
+      .dashboard-mockup.reveal.active:hover {
+        transform: none !important;
+      }
+
+      .dash-caption {
+        width: 100%;
+        text-align: center;
+      }
+
+      .m-segments {
+        height: auto;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+      }
+      .m-seg-header {
+        margin-bottom: 12px;
+      }
+      .m-seg-list {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+      }
+      .m-seg-item {
+        padding: 12px 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .m-seg-item:last-child {
+        border-bottom: none;
+      }
+
+      .roadmap-panel {
+        padding: 24px;
+      }
+      .timeline {
+        padding-left: 0;
+      }
+      .timeline::before {
+        left: 3.5px;
+      }
+      .timeline-node {
+        padding-left: 20px;
+      }
+      .timeline-node::before {
+        left: 0px;
+      }
+      .node-desc {
+        white-space: normal;
+      }
+      
+      .section-divider-wrap .divider-pill {
+        white-space: pre-wrap;
+      }
+      
+      .site-footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 24px;
+      }
+      .floating-wa {
+        width: 52px;
+        height: 52px;
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+    @media (max-width: 479px) {
+      .pill-nav {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="noise-texture"></div>
+
+  <a href="https://wa.me/2348024394730?text=Hi%20Abdulmujib%2C%20I%20just%20went%20through%20the%20Eccentric%20Systems%20proposal%20and%20I%27d%20like%20to%20talk." target="_blank" rel="noopener noreferrer" class="floating-wa">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <nav class="pill-nav">
+    <div class="nav-left">
+      <div class="logo-ring">
+        <svg class="logo-svg" viewBox="0 0 1350 1252" xmlns="http://www.w3.org/2000/svg">
+          <path d="M455.5 260.4c-2.7.7-6.5 2-8.4 3-5.4 2.9-13 11.1-15.9 17.4-2.3 4.9-2.7 7-2.7 14.7 0 7.9.4 9.7 2.9 14.9 3.7 7.6 9.6 13.5 17.2 17.2 5.3 2.6 6.9 2.9 15.4 2.9 7.6 0 10.4-.5 14.2-2.2 7.2-3.3 14.6-10.8 17.9-18.1l2.8-6.2 47.8.2 47.8.3.3 11.3c.3 12.9.7 12.4-10.3 13.6-14.6 1.6-28.8 8.5-41.4 20.1-7 6.6-12.1 13.6-17.3 24-4.3 8.6-5.7 12.7-7.2 21.9l-1.2 7.1-12.5-.3c-13.6-.4-19.2.6-31.8 5.7-10.1 4.1-19 10.2-26.4 18-15.4 16.4-22.9 33.6-24.4 56.4l-.6 9.7-36.6-.2-36.6-.3-.3-52.5-.2-52.5 6.5-2.9c7.3-3.2 13.4-9.2 17.5-17.2 3.6-7.1 4-19.6.9-27.9s-12.1-17.3-20.4-20.4c-8.8-3.3-20.8-2.7-28.4 1.4-14.1 7.7-21.9 23.1-19.1 37.9 2.4 12.7 10.9 23.4 21.5 26.9l4 1.4.5 58.6.5 58.7 2.8 2.7 2.7 2.8 42.3.1c23.2.1 43.2.2 44.4.3 1.6.1 2.5 1.1 3.3 3.8 1.8 5.6 8.7 18.2 12.7 23 1.9 2.4 3.2 4.7 2.9 5.2s-2.7 1.4-5.2 2c-5.5 1.4-16.6 6.8-22.6 10.9-5.2 3.6-15.3 14.1-19.5 20.2-9.4 13.8-14.1 27.8-15 44.7l-.6 11.3h-18.3l-1.3-3.8c-2.1-5.8-6.6-11.7-11.8-15.5-8.8-6.3-11-7.1-21.3-7.1-8.1-.1-10.2.3-14.3 2.3-7.5 3.7-14 10.2-17.8 17.8-3 6.1-3.3 7.7-3.4 15.3 0 7.7.3 9.1 3.5 15.3 3.7 7.5 8.5 12.3 16.5 16.5 4.5 2.4 6.1 2.7 15 2.7 11.9-.1 16.7-1.8 24.3-8.9 4.2-4 6.2-6.9 10.2-15.6.6-1.2 3.1-1.6 11.9-1.8 10.7-.3 11.3-.2 11.8 1.8 1.1 4.3 7.6 16.6 11.8 22.6 9 12.6 24.4 24.2 37.5 28.4 3.6 1.1 7.1 2.2 7.8 2.5.9.3-.4 2.9-4.2 8.3-13.5 19.2-18 44.4-12.1 67.8 2.6 10.4 8.7 23.8 13.3 29.1 1.5 1.7 4.4 5.2 6.5 7.7 7.1 8.6 19.6 16.5 33.7 21.2 7.8 2.7 9.7 2.9 23.3 2.9h14.8l-.3 4.5-.3 4.5-74.8.3-74.7.2-2.7-5.7c-6.2-13.1-18.5-21.3-32-21.3-8.3 0-13.4 1.5-19.9 5.7-6.3 4.1-9.9 8.2-13.3 15.3-2.2 4.7-2.6 6.8-2.6 14.5 0 7.8.4 9.7 2.8 14.7 3.7 7.5 12.8 16 19.9 18.4 3.6 1.3 7.8 1.8 13.3 1.8 10.1-.2 17-3.1 24-10.1 5-5 6.2-6.7 8.9-13.6l1.5-3.7H448v56.8l-5.4 2.2c-6.4 2.5-14.1 10.1-17.4 17-4.3 9-4.4 21.3-.3 30.6 2.8 6.2 10.3 13.7 16.9 17.1 5.1 2.5 6.8 2.8 15.2 2.8 11.4 0 16.2-1.8 24.1-9.2 15.2-14.2 15.4-36.7.4-51.8-3.1-3.2-6.9-5.8-10-6.9-2.7-1.1-5.2-2.3-5.5-2.7s-.3-13 0-28.1l.5-27.3 26.6-.3 26.6-.2 2.3 6.2c4.6 12.7 15 27.1 26.6 36.6 10.5 8.6 27.9 15.6 41.9 16.8 8.8.8 22.8-1 31-4 19.8-7.2 38.7-25.2 46.6-44.6 5.3-13 5.9-19.1 5.9-56 0-31.5-.1-33.8-1.9-35.8-2.7-3.2-9-3-12.2.4l-2.4 2.6-.5 35.1c-.6 32.6-.8 35.7-2.8 41.7-5.4 16.2-17.3 30.1-31.3 36.8-10.5 5-17.2 6.6-27.5 6.4-32.8-.4-60.4-28.6-60.7-62.1-.1-12.6.4-13.9 8.1-19.4 16.2-11.8 28.8-31.9 32.8-52.5 2.3-12.2 1.6-20-2-22.4-.6-.4-3-.8-5.3-.8-5.2 0-8.3 3.3-8.3 9 0 5.3-2.5 17.6-4.6 23-4.5 11.5-16.8 26.6-26.2 32.4-9.6 5.8-18.2 8.1-29.7 8-15.4-.1-26.5-4.9-39.7-17.3-6.7-6.3-8.6-8.8-12.3-16.5-5.4-11.3-7.5-19.9-7.5-30.2 0-21.2 9.8-40.7 27.2-54 6.4-5 7.7-7.8 5.8-12.5-1.7-3.9-4.4-4.9-13.7-4.9-24.7 0-46.8-15.5-56.7-39.8-11.5-28.5-1.8-62.4 22.8-79.6 11.5-8 18.2-10.1 32.6-10 10.4 0 12.2.3 19 3 13.7 5.5 24.1 15.2 31.7 29.7 4.2 7.9 6.1 14.2 7.4 24.2.6 4.4 1.5 9.2 2 10.7 1.8 4.5 9.5 5.3 13.4 1.3 2.1-2 2.5-3.4 2.5-8 0-18.4-9.8-41.1-23.8-55.5-10.7-10.9-22.2-17.9-34.7-20.9-7.7-1.9-12.1-4.9-18.7-12.6-12.1-14.3-17.5-30-16.5-47.9 1.2-20 9.3-36.5 24-48.8 6.6-5.4 10.6-7.7 19.8-11 5.3-1.9 8.4-2.3 17.9-2.3 12.1 0 16 1.1 16 4.3 0 3.8 3.2 13.9 6.9 21.6 7.8 16.6 19.3 28.2 35.6 36.1 11 5.4 19 7.5 29 7.7 8.8.1 11.2-1.3 12.1-7.3.5-2.7.1-3.9-1.8-6-2-2.1-3.8-2.8-10.9-3.7-4.7-.6-11.4-2.1-15-3.3-16.4-5.6-30.7-20.7-37-38.9-3-8.6-3.2-27.1-.5-37 2.8-10.2 9.2-21.5 16.1-28.5 8.1-8.1 13.2-11.5 23.5-15.5 8.2-3.1 8.9-3.2 20.5-2.8 10.7.4 12.8.8 19.7 3.7 18 7.6 29.7 20.9 37.6 42.5 2.5 7 2.6 7.6 3.1 42.6.6 37.2.8 38.7 5.2 41.1 3.1 1.6 8.4.3 10.3-2.6 2.3-3.5 2.4-64.3 0-76.5-3.3-17.5-10.2-31.4-21.6-43-11.1-11.4-20.3-17.6-31.8-21.5l-6.5-2.2-.5-19.1c-.5-18.3-.6-19.3-2.8-21.4l-2.3-2.3-54.3-.3-54.4-.2-1.9-5.2c-3.5-10-14.6-19.2-26.3-21.8-5.7-1.2-8.2-1.1-14.5.4m16.5 18.5c6 3.2 9.3 8.3 9.8 15 .5 7.3-1.6 12.2-7 16.1-7 5.1-16.3 4.8-22.9-.7-4.1-3.5-5.9-7.9-5.9-14.4 0-6.9 2.4-11.6 7.9-15 5.5-3.5 12.7-3.9 18.1-1m-124.7 55.2c17 8.7 12.7 33.3-6.2 35.6-19 2.2-26.9-24.9-10.1-34.6 3.9-2.3 12.7-2.8 16.3-1m-15.2 287.1c14.4 4.9 17.4 23.2 5.3 32.4-4.8 3.7-12.4 4.4-18.5 1.7-8.9-3.9-13.3-15.6-9.1-23.9 4.7-9.1 13.6-13.2 22.3-10.2m6.6 218.9c7 2.6 11.7 10.5 11.1 18.5-1.1 13.6-14.1 21.1-26.4 15.2-10.5-4.9-13.6-18.9-6.2-28.4 4.3-5.3 14.6-7.9 21.5-5.3m127.7 100.4c7 4.1 10.6 12.7 8.6 20.7-1.4 5.4-4.9 9.4-10.4 11.9-5 2.3-9.5 2.4-14.4.4-7.7-3.3-11.2-8.6-11.2-17 0-6.2 1.4-9.7 5.7-13.7 5.8-5.5 14.6-6.4 21.7-2.3"/>
+          <path d="M992 263.4c-11.1 2.5-19.5 9.2-24.8 19.5-2.4 4.8-2.7 6.6-2.7 15 0 7.9.4 10.5 2.3 14.5 3.8 8.4 8.6 13.2 16.8 17.2l7.4 3.5v58.4c0 52.2-.2 58.3-1.6 58.9-2.2.9-51.7.7-53-.2-.6-.4-2.6-3.5-4.4-7-7.4-14-23.5-28.8-37.5-34.7-3.9-1.6-7.6-3.3-8.2-3.8-1-.7-1.3-9.1-1.3-35.8v-34.8l7.5-3.6c5.9-2.8 8.3-4.7 11.4-8.8 8.5-11.3 10.2-25.1 4.7-37.3-5.3-11.5-14.7-18.5-27.8-20.6-11.9-1.8-21.7 1.9-30.6 11.6-6.9 7.5-8.7 12.4-8.6 23.6 0 8.3.4 10.2 2.8 15.4 3.6 7.5 9.2 12.8 17.2 16.7l6.4 3v33.4c0 18.4-.3 33.6-.7 33.8-.5.3-4.8.6-9.7.8l-8.9.4-1.8-8.3c-5-22.9-17.3-41.3-35.6-53.3-19.1-12.4-40.1-15.5-62.3-9.2-19.5 5.5-39.5 23.3-49 43.5-7.8 16.9-8.3 19.8-8.7 60.1l-.4 35.7 3 3c3.8 3.8 7.8 4 11.2.4l2.4-2.6.5-34.6c.6-33.4.7-35 3.1-42.8 4.8-15.4 16.6-32.1 27.8-39.3 2.6-1.7 8.6-4.5 13.2-6.2 7.3-2.7 9.7-3.2 18.4-3.2 15.4 0 27.5 4.9 39.5 16 30.1 27.8 27.8 76.8-4.5 99.9-8.6 6.1-16.5 9.1-27.4 10.5-11.2 1.4-14.1 3.3-14.1 8.8 0 2.7.7 4.4 2.4 6.1 2.2 2 3.5 2.2 10 2.2 8.2-.1 13.1-1.1 21.6-4.4 24.6-9.6 42.6-30.4 48.6-56 1.1-4.8 2.4-8 3.3-8.4 3.4-1.3 18.3-1.6 24.3-.5 7.8 1.5 20.8 7.7 27 12.9 11.1 9.3 19.2 22.2 22.4 35.9 2 8.2 2.2 22.6.5 30.8-2.7 12.8-10.4 26-20.6 35.3-4.7 4.3-6.9 5.5-14.3 7.7-13.5 4.1-24.6 11-35 21.5-12.7 13-22.1 35.7-22.2 53.6 0 6.1.3 7.3 2.3 9.2 3 2.8 8.6 2.9 11.5.2 1.1-1.1 2.4-3.7 2.7-5.7 3.6-23.9 7.5-33.3 18.8-45.9 23.7-26.3 64.7-23.8 86.5 5.3 10.5 13.9 13.7 23.6 13.6 41.8 0 11.4-.4 13.9-2.6 20.3-2.9 8-10 20-15 25.4-11.7 12.3-27.1 18.8-44.6 18.8-7.5 0-8.5.2-10.7 2.5-3.7 3.7-3.4 8.7.8 12.2 10.6 8.9 19.4 19.1 23 26.5 12.5 25.9 7.9 56.5-11.3 75.9-12.6 12.7-25.8 18.4-42 18.3-21.1-.2-39.4-11.8-51.3-32.4-3.9-6.8-6.4-15.5-7.6-25.9-1.3-11.4-3.1-14.1-9.6-14.1-7.9 0-9.7 5.5-7.1 20.7 4.1 23.5 18 45.5 36.1 56.9 4.1 2.7 4.5 3.2 5.1 8.3 1.6 13-1.9 29.3-8.8 40.8-7 11.7-19.9 22.6-31.9 27.1-32.2 11.9-66.7-5.8-79-40.8-2.2-6.2-2.3-8.3-2.8-41.6-.6-32.8-.7-35.3-2.5-37.3-1.4-1.5-3.1-2.1-6.2-2.1-3.6 0-4.6.5-6.3 2.9-2 2.8-2.1 4.2-2.1 35.4 0 29.6.2 33.4 2.1 41.9 3.6 15.5 9.1 25.8 19.8 37.2 10.3 10.8 21.1 18 32.6 21.7 3.9 1.2 7.3 2.7 7.7 3.3s.8 8.4.8 17.3v16.2l2.6 2c2.6 2.1 3.3 2.1 74.5 2.1H903l2.7 5.5c3.6 7.8 10.3 14.9 17.1 18.2 5.2 2.5 6.7 2.8 16.2 2.8 10.3-.1 10.6-.1 16.6-3.8 7.4-4.4 11.8-9.2 15.3-16.7 2.2-4.6 2.6-6.9 2.6-14.5s-.4-9.9-2.6-14.6c-3.6-7.7-9.1-13.4-16.3-17.2-5.7-3-6.8-3.2-16.1-3.2-9 .1-10.6.4-15.3 2.8-7.1 3.7-14.5 11.5-17.3 18.3l-2.3 5.4H771v-19.7l8.8-1.2c26-3.6 49.2-21.5 61.1-47.3 4.9-10.5 6.2-15.8 7-28.3l.6-10 3.5.5c1.9.3 8.9.5 15.5.4 11.2-.1 12.6-.3 21.2-3.6 11.3-4.3 18.7-8.7 26.5-15.7 30.5-27.6 36.2-72.9 13.5-108.3-2-3.1-4.1-5.9-4.7-6.3-2.4-1.5-.6-3.3 5.1-4.9 19.2-5.3 38.6-22.1 47.2-40.9l1.7-3.7h49v106.8l-2.6.6c-3.4.9-12.3 6.6-15 9.7-6.8 7.8-10.1 19.4-8.4 29.2q3.45 19.2 21 27.6c4.7 2.2 6.7 2.6 14.5 2.5 11.1-.2 16.2-2.4 24.7-10.9 7.4-7.4 10.1-14 10-24.5 0-9.4-2.7-17-8.4-23.5-4.1-4.7-12.9-10.5-15.9-10.5-.9 0-2-.7-2.3-1.6s-.6-27.6-.6-59.5v-58l-2.5-2.4c-1.3-1.4-3.4-2.5-4.7-2.5-1.3-.1-13.5-.2-27.3-.3l-25-.2.3-13.5c.5-17.1-1.5-25.8-9.4-41.8-4.8-9.7-6.8-12.5-14.2-20-10.2-10.3-21.2-17.3-31.3-19.9-3.8-.9-6.9-2.1-6.9-2.6 0-.4 2.2-4 4.9-8 6-8.9 9.4-16.2 12.3-26.3 1.9-6.7 2.3-10.2 2.2-23.2V468h28.9c31.4 0 33.8-.4 35.7-5.6.6-1.5 1-28 1-66V333l6.3-2.8c11.3-5.2 19.4-17 20.5-29.8 1.2-15.4-9.5-31.8-23.8-36.2-5.9-1.8-13.2-2.1-19-.8M881.2 281c7.6 2.2 13.8 10.2 13.8 18 0 4.7-2.6 10.4-6.4 13.9-2.5 2.3-11.5 5.4-13.9 4.6-.7-.2-2.4-.6-3.9-.9-3.7-.8-8.5-5.1-10.8-9.7-5.3-10.2 1-23.2 12.4-26 4.4-1 4.7-1 8.8.1m125.5.1c6.8 2.6 10.5 8.6 10.4 17.1 0 7.6-3 12.6-9.3 15.7-16.6 8-32.5-7.8-24.7-24.4 2.8-6 8.5-9.5 15.6-9.5 2.8 0 6.4.5 8 1.1m36 498.4c8.1 3.4 11.7 9.7 11.1 19.1-.5 7.9-4.1 13-11.1 15.6-12.8 4.8-25.2-4.3-25-18.1.2-6.8 3.8-12.4 10.2-15.8 5.1-2.7 9.7-2.9 14.8-.8M949 938.4c10.9 7.2 10.5 23.5-.7 30.7-4.3 2.7-5.5 3-10.9 2.7-7.5-.5-12.1-3.5-15.3-10.1-6.4-13.2 3-27.4 17.6-26.4 3.5.2 6.5 1.2 9.3 3.1"/>
+          <path d="M633 492.1c-2.5 2.1-2.5 2.3-2.8 20.4l-.3 18.3-13.2.4c-11.5.3-13.8.6-17.7 2.6-5.8 3-9.5 6.6-12.8 12.2-2.5 4.2-2.7 5.5-3.2 20l-.5 15.5h-13c-19.2.1-20.2.2-22.5 2.7s-2.7 8.3-.7 10.9c2.6 3.4 5.5 3.9 21.1 3.9H583v23h-16.5c-16.3 0-16.6 0-19 2.5-2.7 2.7-3.3 7.9-1.2 10.6 2.6 3.4 5.5 3.9 21.1 3.9H583v23h-15.5c-20 0-22.5 1.1-22.5 9.5 0 2.4-.7 3.9-2.6 5.4 2.5 1.9 4 2.1 18.9 2.1h16.3l.4 11.2c.4 13 2.4 18.4 9.1 24.5 6.4 5.7 9.7 6.7 24.2 7.3l13 .5.5 17.8.5 17.9 2.8 2.4c3.1 2.6 5.7 3 9 1.2 4.4-2.3 4.6-3.5 4.7-22.1v-17.8l11.3.3 11.2.3.5 18.2c.3 10 .7 18.3 1 18.6 5.5 4.5 9.1 4.7 13.1.8l2.9-2.9V722h21.7l.5 18c.5 19.7 1 21.2 6.8 22.5 3.6.8 8.6-1.7 9.6-4.7.4-1.3.8-9.5.9-18.3s.3-16.3.4-16.8c0-.4 5.5-.7 12.1-.7 14.2 0 20.5-1.9 26.2-7.7 6.4-6.5 8.1-11.9 8.6-27.1l.5-13.2h16.2c15.8 0 16.3-.1 18.9-2.5 3.7-3.4 3.7-9.5 0-12.4-2.5-1.9-4-2.1-19-2.1H774v-23h15.5c20 0 22.5-1.1 22.5-9.5 0-2.4-.7-3.9-2.6-5.4-2.5-1.9-4-2.1-19-2.1H774v-23h16.5c16.3 0 16.6 0 19-2.5 3.4-3.3 3.4-8.7 0-12-2.4-2.5-2.7-2.5-18.8-2.5h-16.4l-.5-12.3c-.8-17.6-4.6-25-15.6-30.4-5.1-2.5-7-2.9-18.7-3.3l-13-.5-.3-18.2-.2-18.2-2.7-2c-3.4-2.8-7.6-2.6-11 .3l-2.8 2.4-.2 17.4c-.1 9.5-.2 17.6-.3 18 0 .5-4.9.8-11 .8h-11v-17.1c0-17.2-.5-20-3.9-22.6-2.7-2.1-7.9-1.5-10.6 1.2-2.5 2.4-2.5 2.6-2.5 20.5v18h-23v-18c0-17.9 0-18.1-2.5-20.5-3-3.1-8-3.2-11.5-.4M751.7 550c1.8 1.1 3.6 3.2 4 4.7 1 3.7 1 139.9 0 143.6-.4 1.5-2.2 3.6-4 4.7-3.1 1.9-5.4 2-73.7 2-63.6 0-70.8-.2-72.9-1.6-5.1-3.6-5.1-3.2-5.1-77.1 0-63.5.1-69.1 1.8-72.3.9-1.9 2.8-4 4.2-4.7 1.9-1 18.5-1.3 72.5-1.3 67.8 0 70.1.1 73.2 2m-131.9 16.9-3.3 2.9v114.4l2.8 2.4 2.8 2.4h112.6l2.7-2.5 2.6-2.4v-56.6c0-36.9-.4-57.3-1-58.6-2.7-4.9-3.1-4.9-61.4-4.9H623zM723 582.2v89.3h-89.5l-.3-44c-.1-24.2 0-44.6.3-45.3.3-.9 10.3-1.2 45-1.2 34.9 0 44.5.3 44.5 1.2"/>
+        </svg>
+      </div>
+      <div class="wordmark">ECCENTRIC<span>SYSTEMS</span></div>
+      <div class="nav-tag">SWIFT CONSULT PROPOSAL</div>
+    </div>
+    <a href="https://wa.me/2348024394730" target="_blank" rel="noopener noreferrer" class="cta-button">Talk to Abdulmujib</a>
+  </nav>
+
+  <div class="spacer-80"></div>
+
+  <section class="section-1">
+    <div class="personal-label reveal" id="hero-label">· FOR SADIQ MANZO · SWIFT CONSULT · CAIRO, EGYPT</div>
+    <h1 class="hero-headline reveal" id="hero-headline">
+      <span class="name-highlight">Sadiq </span><br>
+      here is the system we are building with you, and what it will do for Swift&nbsp;Consult.
+    </h1>
+    <p class="hero-subline reveal" id="hero-subline">Three offers. Ninety days. Everything designed to move first, prove fast, and compound.</p>
+    
+    <div class="offers-grid">
+      <div class="offer-block block-1 reveal hero-offer">
+        <div class="offer-badge badge-gold">THE PILOT · FREE · 30 90 DAYS</div>
+        <p class="offer-statement">We use <strong>industry data and advanced positioning intelligence</strong> to identify the segments of your market that are being overlooked   the investor profiles, buyer origins, and guest types your competitors are not speaking to. Then we build you a content system around those gaps. The right hooks, the right story structures, the right positioning angles for each specific audience. You create the content. We make sure every piece is working toward a <strong>specific, defensible position in your market</strong>   so the right people find you, trust you, and reach out before anyone else gets the chance.</p>
+        <hr class="offer-rule">
+        <div class="deliverables two-col">
+          <div class="deliverable-item">UNDERSERVED SEGMENT IDENTIFICATION</div>
+          <div class="deliverable-item">MARKET AND AUDIENCE INTELLIGENCE</div>
+          <div class="deliverable-item">POSITIONING ANGLE DEVELOPMENT</div>
+          <div class="deliverable-item">HOOK AND STORY STRUCTURE FRAMEWORKS</div>
+          <div class="deliverable-item">INVESTOR FACING CONTENT METHODOLOGY</div>
+          <div class="deliverable-item">30 DAY CONTENT CALENDAR STRUCTURE</div>
+          <div class="deliverable-item">UP TO 2 SESSIONS PER WEEK WHERE NECESSARY</div>
+        </div>
+        <div class="offer-outcome">BY DAY 30, YOUR CONTENT HAS A DIRECTION. BY DAY 90, YOUR POSITION IN THE MARKET IS BUILT.</div>
+      </div>
+      
+      <div class="offers-row">
+        <div class="offer-block block-2 reveal hero-offer">
+          <div class="offer-badge badge-green">DESIGN FREE · IMPLEMENTATION QUOTED</div>
+          <p class="offer-statement">A luxury website engineered to <strong>convert serious investors before they message you</strong> paired with a property dashboard that puts <strong>every listing under your complete control</strong> from your phone, in minutes rather than days.</p>
+          <hr class="offer-rule">
+          <div class="deliverables">
+            <div class="deliverable-item">FULL WEBSITE DESIGN</div>
+            <div class="deliverable-item">PROPERTY DASHBOARD</div>
+            <div class="deliverable-item">AVAILABILITY STATES</div>
+            <div class="deliverable-item">WHATSAPP PRE FILLS PER LISTING</div>
+            <div class="deliverable-item">DEVELOPER READY SPECIFICATION FILE</div>
+          </div>
+          <div class="offer-note">Design is yours at no cost. Implementation by your developer or quoted separately.</div>
+        </div>
+        
+        <div class="offer-block block-3 reveal hero-offer">
+          <div class="offer-badge badge-green">FREE · 90 DAYS</div>
+          <p class="offer-statement">An inventory system that ensures <strong>no property ever double booked</strong> or left stale and an automated greeting system that makes <strong>every guest and investor feel personally remembered</strong> at check in, checkout, and five days later, without you doing anything.</p>
+          <hr class="offer-rule">
+          <div class="deliverables">
+            <div class="deliverable-item">BOOKING TRACKING DASHBOARD</div>
+            <div class="deliverable-item">AVAILABILITY SYNC</div>
+            <div class="deliverable-item">CHECK IN MESSAGE</div>
+            <div class="deliverable-item">CHECKOUT FOLLOW UP</div>
+            <div class="deliverable-item">DAY 5 REFERRAL HOOK</div>
+            <div class="deliverable-item">INVESTOR POST HANDOVER TOUCHPOINT</div>
+          </div>
+          <div class="offer-note">Automated workflows active at no cost for 90 days.</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cta-container reveal hero-offer">
+      <a href="https://wa.me/2348024394730" target="_blank" rel="noopener noreferrer" class="text-cta">Ready to begin? Talk to Abdulmujib <span class="arrow">→</span></a>
+      <div class="cta-meta">+234 802 439 4730 · WhatsApp</div>
+    </div>
+  </section>
+
+  <div class="section-divider-wrap reveal">
+    <div class="divider-line"></div>
+    <div class="divider-pill">ECCENTRIC SYSTEMS</div>
+  </div>
+
+  <section class="section-2">
+    <div class="section-label reveal">THE SYSTEM BEHIND THE OFFER</div>
+    <h2 class="declaration-headline reveal">
+      One dashboard to grow your business and manage that growth with systems that handle marketing, customer acquisition, and operations<br>
+      <em>without adding cost, staff, or complexity</em>
+    </h2>
+    <p class="declaration-p reveal">Eccentric Systems builds and operates custom AI powered systems for businesses. You define the outcomes. We build the infrastructure and run it. Your operation grows. Your overhead does not.</p>
+
+    <div class="module-panel reveal">
+      <div class="module-label">MODULE 1 · GROWTH SYSTEM</div>
+      <h3 class="module-headline">Everything that brings the right people to you   positioned, targeted, and converted.</h3>
+      <div class="module-content">
+        <p class="module-prose stagger-child">Module 1 operates as your combined content and marketing intelligence in one system. The content head determines what gets created and why   using positioning frameworks, audience intelligence, and market gap analysis to ensure every piece of content is engineered for a specific segment rather than a general audience. The marketing head determines how, when, and where that content gets deployed as a paid acquisition system   deciding which platforms carry the right audience, how to segment and target them, what to bid, where to send each lead type, and what signals to track to know what is genuinely working. A rental focused campaign sends leads directly to the rentals page. An investment focused campaign sends leads to the investment properties page. The right person lands on the right page every time. At full deployment, the system makes these decisions and executes them autonomously   building toward a defined acquisition goal without requiring your involvement. Sessions, approval gates, and escalation points are set by you. As trust builds, the gates come down.</p>
+        <div class="module-deliverables">
+          <div class="module-deliverable stagger-child">POSITIONING AND AUDIENCE INTELLIGENCE</div>
+          <div class="module-deliverable stagger-child">CONTENT FRAMEWORK DEVELOPMENT</div>
+          <div class="module-deliverable stagger-child">SHOOTING BRIEFS FOR AD SPECIFIC CONTENT</div>
+          <div class="module-deliverable stagger-child">MULTI PLATFORM AD STRATEGY</div>
+          <div class="module-deliverable stagger-child">AUDIENCE SEGMENTATION AND TARGETING</div>
+          <div class="module-deliverable stagger-child">LEAD TYPE SPECIFIC FUNNEL ROUTING</div>
+          <div class="module-deliverable stagger-child">CPA MANAGEMENT AND BUDGET OPTIMISATION</div>
+          <div class="module-deliverable stagger-child">KEYWORD AND PLACEMENT TARGETING</div>
+          <div class="module-deliverable stagger-child">PERFORMANCE SIGNAL TRACKING</div>
+          <div class="module-deliverable stagger-child">CONTINUOUS CAMPAIGN OPTIMISATION</div>
+          <div class="module-deliverable stagger-child">CONTENT CREATOR IDENTIFICATION</div>
+          <div class="module-deliverable stagger-child">AUTONOMOUS OPERATION AT FULL DEPLOYMENT</div>
+        </div>
+      </div>
+      <div class="module-outcome stagger-child">THE OUTPUT IS QUALIFIED ACQUISITION   THE RIGHT PEOPLE, ON THE RIGHT PAGE, AT THE RIGHT MOMENT.</div>
+    </div>
+
+    <div class="module-panel reveal">
+      <div class="module-label">MODULE 2 · OPERATIONS SYSTEM</div>
+      <h3 class="module-headline">Everything that happens once someone engages handled, tracked, and optimised.</h3>
+      <div class="module-content">
+        <p class="module-prose stagger-child">Module 2 takes over the moment a lead becomes a client. It manages property inventory, the booking flow, the client experience, and the retention loop and it connects back to Module 1 so the entire system learns from every transaction. When a property fills, the ads pause automatically. When it empties, they restart. Nothing is manual. Nothing slips through.</p>
+        <div class="module-deliverables">
+          <div class="module-deliverable stagger-child">PROPERTY INVENTORY MANAGEMENT</div>
+          <div class="module-deliverable stagger-child">BOOKING TRACKING AND STATUS</div>
+          <div class="module-deliverable stagger-child">AVAILABILITY SYNC</div>
+          <div class="module-deliverable stagger-child">CLIENT GREETING SEQUENCES</div>
+          <div class="module-deliverable stagger-child">POST STAY FOLLOW UP AUTOMATION</div>
+          <div class="module-deliverable stagger-child">REVIEW GENERATION WORKFLOWS</div>
+          <div class="module-deliverable stagger-child">REFERRAL TRIGGER SEQUENCES</div>
+          <div class="module-deliverable stagger-child">PAYMENT TRACKING</div>
+          <div class="module-deliverable stagger-child">OPERATIONS DASHBOARD</div>
+          <div class="module-deliverable stagger-child">CROSS SYSTEM AUTOMATION</div>
+          <div class="module-deliverable stagger-child">AD PAUSE ON INVENTORY FILL</div>
+          <div class="module-deliverable stagger-child">FULL CYCLE REPORTING</div>
+        </div>
+      </div>
+      <div class="module-outcome stagger-child">THE OUTPUT IS A BUSINESS THAT RUNS WITHOUT YOU MANAGING EVERY MOVING PART.</div>
+    </div>
+
+    <div class="dashboard-wrapper">
+
+      <div class="dashboard-mockup reveal">
+        <div class="m-topbar">
+          <div class="m-topbar-left">
+            <svg class="m-logo" viewBox="0 0 1350 1252" xmlns="http://www.w3.org/2000/svg">
+              <path d="M455.5 260.4c-2.7.7-6.5 2-8.4 3-5.4 2.9-13 11.1-15.9 17.4-2.3 4.9-2.7 7-2.7 14.7 0 7.9.4 9.7 2.9 14.9 3.7 7.6 9.6 13.5 17.2 17.2 5.3 2.6 6.9 2.9 15.4 2.9 7.6 0 10.4-.5 14.2-2.2 7.2-3.3 14.6-10.8 17.9-18.1l2.8-6.2 47.8.2 47.8.3.3 11.3c.3 12.9.7 12.4-10.3 13.6-14.6 1.6-28.8 8.5-41.4 20.1-7 6.6-12.1 13.6-17.3 24-4.3 8.6-5.7 12.7-7.2 21.9l-1.2 7.1-12.5-.3c-13.6-.4-19.2.6-31.8 5.7-10.1 4.1-19 10.2-26.4 18-15.4 16.4-22.9 33.6-24.4 56.4l-.6 9.7-36.6-.2-36.6-.3-.3-52.5-.2-52.5 6.5-2.9c7.3-3.2 13.4-9.2 17.5-17.2 3.6-7.1 4-19.6.9-27.9s-12.1-17.3-20.4-20.4c-8.8-3.3-20.8-2.7-28.4 1.4-14.1 7.7-21.9 23.1-19.1 37.9 2.4 12.7 10.9 23.4 21.5 26.9l4 1.4.5 58.6.5 58.7 2.8 2.7 2.7 2.8 42.3.1c23.2.1 43.2.2 44.4.3 1.6.1 2.5 1.1 3.3 3.8 1.8 5.6 8.7 18.2 12.7 23 1.9 2.4 3.2 4.7 2.9 5.2s-2.7 1.4-5.2 2c-5.5 1.4-16.6 6.8-22.6 10.9-5.2 3.6-15.3 14.1-19.5 20.2-9.4 13.8-14.1 27.8-15 44.7l-.6 11.3h-18.3l-1.3-3.8c-2.1-5.8-6.6-11.7-11.8-15.5-8.8-6.3-11-7.1-21.3-7.1-8.1-.1-10.2.3-14.3 2.3-7.5 3.7-14 10.2-17.8 17.8-3 6.1-3.3 7.7-3.4 15.3 0 7.7.3 9.1 3.5 15.3 3.7 7.5 8.5 12.3 16.5 16.5 4.5 2.4 6.1 2.7 15 2.7 11.9-.1 16.7-1.8 24.3-8.9 4.2-4 6.2-6.9 10.2-15.6.6-1.2 3.1-1.6 11.9-1.8 10.7-.3 11.3-.2 11.8 1.8 1.1 4.3 7.6 16.6 11.8 22.6 9 12.6 24.4 24.2 37.5 28.4 3.6 1.1 7.1 2.2 7.8 2.5.9.3-.4 2.9-4.2 8.3-13.5 19.2-18 44.4-12.1 67.8 2.6 10.4 8.7 23.8 13.3 29.1 1.5 1.7 4.4 5.2 6.5 7.7 7.1 8.6 19.6 16.5 33.7 21.2 7.8 2.7 9.7 2.9 23.3 2.9h14.8l-.3 4.5-.3 4.5-74.8.3-74.7.2-2.7-5.7c-6.2-13.1-18.5-21.3-32-21.3-8.3 0-13.4 1.5-19.9 5.7-6.3 4.1-9.9 8.2-13.3 15.3-2.2 4.7-2.6 6.8-2.6 14.5 0 7.8.4 9.7 2.8 14.7 3.7 7.5 12.8 16 19.9 18.4 3.6 1.3 7.8 1.8 13.3 1.8 10.1-.2 17-3.1 24-10.1 5-5 6.2-6.7 8.9-13.6l1.5-3.7H448v56.8l-5.4 2.2c-6.4 2.5-14.1 10.1-17.4 17-4.3 9-4.4 21.3-.3 30.6 2.8 6.2 10.3 13.7 16.9 17.1 5.1 2.5 6.8 2.8 15.2 2.8 11.4 0 16.2-1.8 24.1-9.2 15.2-14.2 15.4-36.7.4-51.8-3.1-3.2-6.9-5.8-10-6.9-2.7-1.1-5.2-2.3-5.5-2.7s-.3-13 0-28.1l.5-27.3 26.6-.3 26.6-.2 2.3 6.2c4.6 12.7 15 27.1 26.6 36.6 10.5 8.6 27.9 15.6 41.9 16.8 8.8.8 22.8-1 31-4 19.8-7.2 38.7-25.2 46.6-44.6 5.3-13 5.9-19.1 5.9-56 0-31.5-.1-33.8-1.9-35.8-2.7-3.2-9-3-12.2.4l-2.4 2.6-.5 35.1c-.6 32.6-.8 35.7-2.8 41.7-5.4 16.2-17.3 30.1-31.3 36.8-10.5 5-17.2 6.6-27.5 6.4-32.8-.4-60.4-28.6-60.7-62.1-.1-12.6.4-13.9 8.1-19.4 16.2-11.8 28.8-31.9 32.8-52.5 2.3-12.2 1.6-20-2-22.4-.6-.4-3-.8-5.3-.8-5.2 0-8.3 3.3-8.3 9 0 5.3-2.5 17.6-4.6 23-4.5 11.5-16.8 26.6-26.2 32.4-9.6 5.8-18.2 8.1-29.7 8-15.4-.1-26.5-4.9-39.7-17.3-6.7-6.3-8.6-8.8-12.3-16.5-5.4-11.3-7.5-19.9-7.5-30.2 0-21.2 9.8-40.7 27.2-54 6.4-5 7.7-7.8 5.8-12.5-1.7-3.9-4.4-4.9-13.7-4.9-24.7 0-46.8-15.5-56.7-39.8-11.5-28.5-1.8-62.4 22.8-79.6 11.5-8 18.2-10.1 32.6-10 10.4 0 12.2.3 19 3 13.7 5.5 24.1 15.2 31.7 29.7 4.2 7.9 6.1 14.2 7.4 24.2.6 4.4 1.5 9.2 2 10.7 1.8 4.5 9.5 5.3 13.4 1.3 2.1-2 2.5-3.4 2.5-8 0-18.4-9.8-41.1-23.8-55.5-10.7-10.9-22.2-17.9-34.7-20.9-7.7-1.9-12.1-4.9-18.7-12.6-12.1-14.3-17.5-30-16.5-47.9 1.2-20 9.3-36.5 24-48.8 6.6-5.4 10.6-7.7 19.8-11 5.3-1.9 8.4-2.3 17.9-2.3 12.1 0 16 1.1 16 4.3 0 3.8 3.2 13.9 6.9 21.6 7.8 16.6 19.3 28.2 35.6 36.1 11 5.4 19 7.5 29 7.7 8.8.1 11.2-1.3 12.1-7.3.5-2.7.1-3.9-1.8-6-2-2.1-3.8-2.8-10.9-3.7-4.7-.6-11.4-2.1-15-3.3-16.4-5.6-30.7-20.7-37-38.9-3-8.6-3.2-27.1-.5-37 2.8-10.2 9.2-21.5 16.1-28.5 8.1-8.1 13.2-11.5 23.5-15.5 8.2-3.1 8.9-3.2 20.5-2.8 10.7.4 12.8.8 19.7 3.7 18 7.6 29.7 20.9 37.6 42.5 2.5 7 2.6 7.6 3.1 42.6.6 37.2.8 38.7 5.2 41.1 3.1 1.6 8.4.3 10.3-2.6 2.3-3.5 2.4-64.3 0-76.5-3.3-17.5-10.2-31.4-21.6-43-11.1-11.4-20.3-17.6-31.8-21.5l-6.5-2.2-.5-19.1c-.5-18.3-.6-19.3-2.8-21.4l-2.3-2.3-54.3-.3-54.4-.2-1.9-5.2c-3.5-10-14.6-19.2-26.3-21.8-5.7-1.2-8.2-1.1-14.5.4m16.5 18.5c6 3.2 9.3 8.3 9.8 15 .5 7.3-1.6 12.2-7 16.1-7 5.1-16.3 4.8-22.9-.7-4.1-3.5-5.9-7.9-5.9-14.4 0-6.9 2.4-11.6 7.9-15 5.5-3.5 12.7-3.9 18.1-1m-124.7 55.2c17 8.7 12.7 33.3-6.2 35.6-19 2.2-26.9-24.9-10.1-34.6 3.9-2.3 12.7-2.8 16.3-1m-15.2 287.1c14.4 4.9 17.4 23.2 5.3 32.4-4.8 3.7-12.4 4.4-18.5 1.7-8.9-3.9-13.3-15.6-9.1-23.9 4.7-9.1 13.6-13.2 22.3-10.2m6.6 218.9c7 2.6 11.7 10.5 11.1 18.5-1.1 13.6-14.1 21.1-26.4 15.2-10.5-4.9-13.6-18.9-6.2-28.4 4.3-5.3 14.6-7.9 21.5-5.3m127.7 100.4c7 4.1 10.6 12.7 8.6 20.7-1.4 5.4-4.9 9.4-10.4 11.9-5 2.3-9.5 2.4-14.4.4-7.7-3.3-11.2-8.6-11.2-17 0-6.2 1.4-9.7 5.7-13.7 5.8-5.5 14.6-6.4 21.7-2.3"/>
+              <path d="M992 263.4c-11.1 2.5-19.5 9.2-24.8 19.5-2.4 4.8-2.7 6.6-2.7 15 0 7.9.4 10.5 2.3 14.5 3.8 8.4 8.6 13.2 16.8 17.2l7.4 3.5v58.4c0 52.2-.2 58.3-1.6 58.9-2.2.9-51.7.7-53-.2-.6-.4-2.6-3.5-4.4-7-7.4-14-23.5-28.8-37.5-34.7-3.9-1.6-7.6-3.3-8.2-3.8-1-.7-1.3-9.1-1.3-35.8v-34.8l7.5-3.6c5.9-2.8 8.3-4.7 11.4-8.8 8.5-11.3 10.2-25.1 4.7-37.3-5.3-11.5-14.7-18.5-27.8-20.6-11.9-1.8-21.7 1.9-30.6 11.6-6.9 7.5-8.7 12.4-8.6 23.6 0 8.3.4 10.2 2.8 15.4 3.6 7.5 9.2 12.8 17.2 16.7l6.4 3v33.4c0 18.4-.3 33.6-.7 33.8-.5.3-4.8.6-9.7.8l-8.9.4-1.8-8.3c-5-22.9-17.3-41.3-35.6-53.3-19.1-12.4-40.1-15.5-62.3-9.2-19.5 5.5-39.5 23.3-49 43.5-7.8 16.9-8.3 19.8-8.7 60.1l-.4 35.7 3 3c3.8 3.8 7.8 4 11.2.4l2.4-2.6.5-34.6c.6-33.4.7-35 3.1-42.8 4.8-15.4 16.6-32.1 27.8-39.3 2.6-1.7 8.6-4.5 13.2-6.2 7.3-2.7 9.7-3.2 18.4-3.2 15.4 0 27.5 4.9 39.5 16 30.1 27.8 27.8 76.8-4.5 99.9-8.6 6.1-16.5 9.1-27.4 10.5-11.2 1.4-14.1 3.3-14.1 8.8 0 2.7.7 4.4 2.4 6.1 2.2 2 3.5 2.2 10 2.2 8.2-.1 13.1-1.1 21.6-4.4 24.6-9.6 42.6-30.4 48.6-56 1.1-4.8 2.4-8 3.3-8.4 3.4-1.3 18.3-1.6 24.3-.5 7.8 1.5 20.8 7.7 27 12.9 11.1 9.3 19.2 22.2 22.4 35.9 2 8.2 2.2 22.6.5 30.8-2.7 12.8-10.4 26-20.6 35.3-4.7 4.3-6.9 5.5-14.3 7.7-13.5 4.1-24.6 11-35 21.5-12.7 13-22.1 35.7-22.2 53.6 0 6.1.3 7.3 2.3 9.2 3 2.8 8.6 2.9 11.5.2 1.1-1.1 2.4-3.7 2.7-5.7 3.6-23.9 7.5-33.3 18.8-45.9 23.7-26.3 64.7-23.8 86.5 5.3 10.5 13.9 13.7 23.6 13.6 41.8 0 11.4-.4 13.9-2.6 20.3-2.9 8-10 20-15 25.4-11.7 12.3-27.1 18.8-44.6 18.8-7.5 0-8.5.2-10.7 2.5-3.7 3.7-3.4 8.7.8 12.2 10.6 8.9 19.4 19.1 23 26.5 12.5 25.9 7.9 56.5-11.3 75.9-12.6 12.7-25.8 18.4-42 18.3-21.1-.2-39.4-11.8-51.3-32.4-3.9-6.8-6.4-15.5-7.6-25.9-1.3-11.4-3.1-14.1-9.6-14.1-7.9 0-9.7 5.5-7.1 20.7 4.1 23.5 18 45.5 36.1 56.9 4.1 2.7 4.5 3.2 5.1 8.3 1.6 13-1.9 29.3-8.8 40.8-7 11.7-19.9 22.6-31.9 27.1-32.2 11.9-66.7-5.8-79-40.8-2.2-6.2-2.3-8.3-2.8-41.6-.6-32.8-.7-35.3-2.5-37.3-1.4-1.5-3.1-2.1-6.2-2.1-3.6 0-4.6.5-6.3 2.9-2 2.8-2.1 4.2-2.1 35.4 0 29.6.2 33.4 2.1 41.9 3.6 15.5 9.1 25.8 19.8 37.2 10.3 10.8 21.1 18 32.6 21.7 3.9 1.2 7.3 2.7 7.7 3.3s.8 8.4.8 17.3v16.2l2.6 2c2.6 2.1 3.3 2.1 74.5 2.1H903l2.7 5.5c3.6 7.8 10.3 14.9 17.1 18.2 5.2 2.5 6.7 2.8 16.2 2.8 10.3-.1 10.6-.1 16.6-3.8 7.4-4.4 11.8-9.2 15.3-16.7 2.2-4.6 2.6-6.9 2.6-14.5s-.4-9.9-2.6-14.6c-3.6-7.7-9.1-13.4-16.3-17.2-5.7-3-6.8-3.2-16.1-3.2-9 .1-10.6.4-15.3 2.8-7.1 3.7-14.5 11.5-17.3 18.3l-2.3 5.4H771v-19.7l8.8-1.2c26-3.6 49.2-21.5 61.1-47.3 4.9-10.5 6.2-15.8 7-28.3l.6-10 3.5.5c1.9.3 8.9.5 15.5.4 11.2-.1 12.6-.3 21.2-3.6 11.3-4.3 18.7-8.7 26.5-15.7 30.5-27.6 36.2-72.9 13.5-108.3-2-3.1-4.1-5.9-4.7-6.3-2.4-1.5-.6-3.3 5.1-4.9 19.2-5.3 38.6-22.1 47.2-40.9l1.7-3.7h49v106.8l-2.6.6c-3.4.9-12.3 6.6-15 9.7-6.8 7.8-10.1 19.4-8.4 29.2q3.45 19.2 21 27.6c4.7 2.2 6.7 2.6 14.5 2.5 11.1-.2 16.2-2.4 24.7-10.9 7.4-7.4 10.1-14 10-24.5 0-9.4-2.7-17-8.4-23.5-4.1-4.7-12.9-10.5-15.9-10.5-.9 0-2-.7-2.3-1.6s-.6-27.6-.6-59.5v-58l-2.5-2.4c-1.3-1.4-3.4-2.5-4.7-2.5-1.3-.1-13.5-.2-27.3-.3l-25-.2.3-13.5c.5-17.1-1.5-25.8-9.4-41.8-4.8-9.7-6.8-12.5-14.2-20-10.2-10.3-21.2-17.3-31.3-19.9-3.8-.9-6.9-2.1-6.9-2.6 0-.4 2.2-4 4.9-8 6-8.9 9.4-16.2 12.3-26.3 1.9-6.7 2.3-10.2 2.2-23.2V468h28.9c31.4 0 33.8-.4 35.7-5.6.6-1.5 1-28 1-66V333l6.3-2.8c11.3-5.2 19.4-17 20.5-29.8 1.2-15.4-9.5-31.8-23.8-36.2-5.9-1.8-13.2-2.1-19-.8M881.2 281c7.6 2.2 13.8 10.2 13.8 18 0 4.7-2.6 10.4-6.4 13.9-2.5 2.3-11.5 5.4-13.9 4.6-.7-.2-2.4-.6-3.9-.9-3.7-.8-8.5-5.1-10.8-9.7-5.3-10.2 1-23.2 12.4-26 4.4-1 4.7-1 8.8.1m125.5.1c6.8 2.6 10.5 8.6 10.4 17.1 0 7.6-3 12.6-9.3 15.7-16.6 8-32.5-7.8-24.7-24.4 2.8-6 8.5-9.5 15.6-9.5 2.8 0 6.4.5 8 1.1m36 498.4c8.1 3.4 11.7 9.7 11.1 19.1-.5 7.9-4.1 13-11.1 15.6-12.8 4.8-25.2-4.3-25-18.1.2-6.8 3.8-12.4 10.2-15.8 5.1-2.7 9.7-2.9 14.8-.8M949 938.4c10.9 7.2 10.5 23.5-.7 30.7-4.3 2.7-5.5 3-10.9 2.7-7.5-.5-12.1-3.5-15.3-10.1-6.4-13.2 3-27.4 17.6-26.4 3.5.2 6.5 1.2 9.3 3.1"/>
+              <path d="M633 492.1c-2.5 2.1-2.5 2.3-2.8 20.4l-.3 18.3-13.2.4c-11.5.3-13.8.6-17.7 2.6-5.8 3-9.5 6.6-12.8 12.2-2.5 4.2-2.7 5.5-3.2 20l-.5 15.5h-13c-19.2.1-20.2.2-22.5 2.7s-2.7 8.3-.7 10.9c2.6 3.4 5.5 3.9 21.1 3.9H583v23h-16.5c-16.3 0-16.6 0-19 2.5-2.7 2.7-3.3 7.9-1.2 10.6 2.6 3.4 5.5 3.9 21.1 3.9H583v23h-15.5c-20 0-22.5 1.1-22.5 9.5 0 2.4-.7 3.9-2.6 5.4 2.5 1.9 4 2.1 18.9 2.1h16.3l.4 11.2c.4 13 2.4 18.4 9.1 24.5 6.4 5.7 9.7 6.7 24.2 7.3l13 .5.5 17.8.5 17.9 2.8 2.4c3.1 2.6 5.7 3 9 1.2 4.4-2.3 4.6-3.5 4.7-22.1v-17.8l11.3.3 11.2.3.5 18.2c.3 10 .7 18.3 1 18.6 5.5 4.5 9.1 4.7 13.1.8l2.9-2.9V722h21.7l.5 18c.5 19.7 1 21.2 6.8 22.5 3.6.8 8.6-1.7 9.6-4.7.4-1.3.8-9.5.9-18.3s.3-16.3.4-16.8c0-.4 5.5-.7 12.1-.7 14.2 0 20.5-1.9 26.2-7.7 6.4-6.5 8.1-11.9 8.6-27.1l.5-13.2h16.2c15.8 0 16.3-.1 18.9-2.5 3.7-3.4 3.7-9.5 0-12.4-2.5-1.9-4-2.1-19-2.1H774v-23h15.5c20 0 22.5-1.1 22.5-9.5 0-2.4-.7-3.9-2.6-5.4-2.5-1.9-4-2.1-19-2.1H774v-23h16.5c16.3 0 16.6 0 19-2.5 3.4-3.3 3.4-8.7 0-12-2.4-2.5-2.7-2.5-18.8-2.5h-16.4l-.5-12.3c-.8-17.6-4.6-25-15.6-30.4-5.1-2.5-7-2.9-18.7-3.3l-13-.5-.3-18.2-.2-18.2-2.7-2c-3.4-2.8-7.6-2.6-11 .3l-2.8 2.4-.2 17.4c-.1 9.5-.2 17.6-.3 18 0 .5-4.9.8-11 .8h-11v-17.1c0-17.2-.5-20-3.9-22.6-2.7-2.1-7.9-1.5-10.6 1.2-2.5 2.4-2.5 2.6-2.5 20.5v18h-23v-18c0-17.9 0-18.1-2.5-20.5-3-3.1-8-3.2-11.5-.4M751.7 550c1.8 1.1 3.6 3.2 4 4.7 1 3.7 1 139.9 0 143.6-.4 1.5-2.2 3.6-4 4.7-3.1 1.9-5.4 2-73.7 2-63.6 0-70.8-.2-72.9-1.6-5.1-3.6-5.1-3.2-5.1-77.1 0-63.5.1-69.1 1.8-72.3.9-1.9 2.8-4 4.2-4.7 1.9-1 18.5-1.3 72.5-1.3 67.8 0 70.1.1 73.2 2m-131.9 16.9-3.3 2.9v114.4l2.8 2.4 2.8 2.4h112.6l2.7-2.5 2.6-2.4v-56.6c0-36.9-.4-57.3-1-58.6-2.7-4.9-3.1-4.9-61.4-4.9H623zM723 582.2v89.3h-89.5l-.3-44c-.1-24.2 0-44.6.3-45.3.3-.9 10.3-1.2 45-1.2 34.9 0 44.5.3 44.5 1.2"/>
+            </svg>
+            <div class="m-title">ECCENTRIC SYSTEMS</div>
+            <div class="m-dot">·</div>
+            <div class="m-subtitle">SWIFT CONSULT</div>
+          </div>
+          <div class="m-topbar-right">
+            <div class="m-chrome-circle"></div>
+            <div class="m-chrome-circle"></div>
+            <div class="m-chrome-circle"></div>
+          </div>
+        </div>
+        <div class="m-body">
+          <div class="m-sidebar">
+            <div class="m-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+            <div class="m-icon active"><svg viewBox="0 0 24 24"><path d="M21.69 11.51l-4.48-1.5V6a2 2 0 00-2-2h-3L7.79 6.22H3v9.55h4.79L12.21 18h3a2 2 0 002-2v-4l4.48-1.5a1 1 0 000-1.89zM15.21 14h-3L8.63 12H5V8h3.63l3.58-2h3v8z"/></svg></div>
+            <div class="m-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M9 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/><circle cx="16" cy="8" r="3"/><path d="M16 14c-1.4 0-3.83.6-5.35 1.63A5.5 5.5 0 0 1 12 18v2h9v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+            <div class="m-icon"><svg viewBox="0 0 24 24"><path d="M3 4l8 10.33V20l2 2v-7.67L21 4H3z"/></svg></div>
+            <div class="m-icon"><svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4 8-8V11l-8 8-4-4-6 6z"/></svg></div>
+          </div>
+          <div class="m-main">
+            <div class="m-metrics">
+              <div class="m-metric-block">
+                <div class="m-metric-val">3</div>
+                <div class="m-metric-label">CAMPAIGNS ACTIVE</div>
+              </div>
+              <div class="m-metric-block">
+                <div class="m-metric-val">12</div>
+                <div class="m-metric-label">CONTENT LIVE</div>
+              </div>
+              <div class="m-metric-block">
+                <div class="m-metric-val">47</div>
+                <div class="m-metric-label">LEADS THIS WEEK</div>
+              </div>
+              <div class="m-metric-block">
+                <div class="m-metric-val gold">$18.40</div>
+                <div class="m-metric-label">AVG COST PER LEAD</div>
+              </div>
+            </div>
+            <div class="m-middle">
+              <div class="m-panel-left">
+                <div class="m-panel-header">ACTIVE CAMPAIGNS</div>
+                
+                <div class="m-camp-row">
+                  <div class="m-camp-name">Rental   Zamalek</div>
+                  <div class="m-camp-status green">RUNNING</div>
+                  <div class="m-camp-stats">
+                    <span class="m-camp-reach">8.4K</span>
+                    <span class="m-dot">·</span>
+                    <span class="m-camp-cpa">$14.20</span>
+                  </div>
+                </div>
+                
+                <div class="m-camp-row">
+                  <div class="m-camp-name">Investment   New Capital</div>
+                  <div class="m-camp-status green">RUNNING</div>
+                  <div class="m-camp-stats">
+                    <span class="m-camp-reach">12.1K</span>
+                    <span class="m-dot">·</span>
+                    <span class="m-camp-cpa">$22.80</span>
+                  </div>
+                </div>
+                
+                <div class="m-camp-row">
+                  <div class="m-camp-name">Brand   Cairo Lifestyle</div>
+                  <div class="m-camp-status gold">OPTIMISING</div>
+                  <div class="m-camp-stats">
+                    <span class="m-camp-reach">31.2K</span>
+                    <span class="m-dot">·</span>
+                    <span class="m-camp-cpa dash"> </span>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="m-panel-right">
+                <div class="m-panel-header">LEAD ROUTING</div>
+                
+                <div class="m-route-row">
+                  <div class="m-route-src">Rental Leads</div>
+                  <div class="route-arrow"></div>
+                  <div class="m-route-dest-wrap">
+                    <div class="m-route-dest green">/rentals</div>
+                    <div class="m-route-sub">23 leads this week</div>
+                  </div>
+                </div>
+                
+                <div class="m-route-row">
+                  <div class="m-route-src">Investment Leads</div>
+                  <div class="route-arrow"></div>
+                  <div class="m-route-dest-wrap">
+                    <div class="m-route-dest green">/investments</div>
+                    <div class="m-route-sub">14 leads this week</div>
+                  </div>
+                </div>
+                
+                <div class="m-route-row">
+                  <div class="m-route-src">Brand Traffic</div>
+                  <div class="route-arrow"></div>
+                  <div class="m-route-dest-wrap">
+                    <div class="m-route-dest gray">/</div>
+                    <div class="m-route-sub">10 this week</div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div class="m-segments">
+              <div class="m-seg-header">ACTIVE SEGMENTS</div>
+              <div class="m-seg-list">
+                <div class="m-seg-item">
+                  <div class="pulse-dot green-dot"></div>
+                  <div class="m-seg-text">
+                    <div class="m-seg-name">Nigerian Diaspora (UK)</div>
+                    <div class="m-seg-status green">ACTIVE</div>
+                  </div>
+                </div>
+                <div class="m-seg-item">
+                  <div class="pulse-dot green-dot"></div>
+                  <div class="m-seg-text">
+                    <div class="m-seg-name">Gulf Based Investors</div>
+                    <div class="m-seg-status green">ACTIVE</div>
+                  </div>
+                </div>
+                <div class="m-seg-item">
+                  <div class="static-dot gold-dot"></div>
+                  <div class="m-seg-text">
+                    <div class="m-seg-name">Cairo Short Stay Travelers</div>
+                    <div class="m-seg-status gold">LEARNING</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="dash-caption reveal">One screen. Content, campaigns, audiences, and funnel routing   visible and controllable from a single dashboard.</div>
+</div>
+
+    <div class="roadmap-panel reveal">
+      <div class="story-label roadmap-label">THE 90 DAY ROADMAP · FOR SADIQ MANZO</div>
+      <h4 class="story-heading">What the next 90 days look like   day by day, week by week.</h4>
+      <div class="timeline">
+        <div class="timeline-node timeline-step">
+          <div class="node-label">DAY 1</div>
+          <p class="node-desc">First session. We map your market using industry data and identify the specific audience segments your competitors are overlooking. Your positioning angle is defined   not generic, not aspirational, but specific and defensible. This is the foundation everything else builds on.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEK 1</div>
+          <p class="node-desc">The content framework is built around your positioning angle. Hook structures, story architectures, and value delivery flows engineered for the exact investor profiles and guest types we identified on Day 1. Every format has a purpose. Nothing is produced without a strategic reason.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEK 2</div>
+          <p class="node-desc">First content pieces produced using the new framework. A session reviews execution and calibrates the framework to your voice. Adjustments are made. The structure is not a template   it adapts to how you communicate naturally.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEKS 3 AND 4</div>
+          <p class="node-desc">Content rhythm is established. Sessions shift to refinement   what is landing, what needs adjustment, what the framework is teaching us about your audience. By end of Month 1, three content types are running in parallel: investor facing positioning, property specific content, and market authority signals.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">MONTH 2</div>
+          <p class="node-desc">Positioning deepens. Content begins addressing the underserved segments with greater specificity   speaking directly to the investor profiles and guest types your competitors have not yet identified. Sessions focus on which angles are generating the right quality of attention, not just volume.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEKS 7 AND 8</div>
+          <p class="node-desc">The content system is running with consistency. Your positioning is no longer reactive   it is intentional and compounding. Each piece builds on the last. The audience you are building is the one worth building.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEKS 9 AND 10</div>
+          <p class="node-desc">Positioning is established. The right people are finding you through content before they search for an agent. Qualified enquiries from international investors and premium guests are arriving through channels that did not exist 60 days ago.</p>
+        </div>
+        <div class="timeline-node timeline-step">
+          <div class="node-label">WEEKS 11 AND 12</div>
+          <p class="node-desc">The 90 day review. We assess what the framework has built   what is working, what the audience data shows, and what the next stage looks like. This is where the conversation about what comes next begins   on the back of 90 days of evidence, not promises.</p>
+        </div>
+      </div>
+      <div class="roadmap-footer stagger-child">UP TO 2 SESSIONS PER WEEK WHERE NECESSARY · FULLY PERSONAL · FULLY ACCOUNTABLE</div>
+    </div>
+
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-left">Eccentric Systems · 2026</div>
+    <div class="footer-right">
+      <a href="https://wa.me/2348024394730" target="_blank" rel="noopener noreferrer">WhatsApp · +234 802 439 4730</a>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Hero load animations
+      setTimeout(() => {
+        const label = document.getElementById('hero-label');
+        if(label) label.classList.add('active');
+      }, 100);
+      
+      setTimeout(() => {
+        const headline = document.getElementById('hero-headline');
+        if(headline) headline.classList.add('active');
+      }, 200);
+
+      setTimeout(() => {
+        const subline = document.getElementById('hero-subline');
+        if(subline) subline.classList.add('active');
+      }, 400);
+
+      setTimeout(() => {
+        const heroOffers = document.querySelectorAll('.hero-offer');
+        heroOffers.forEach((block, index) => {
+          setTimeout(() => {
+            block.classList.add('active');
+          }, index * 80);
+        });
+      }, 600);
+
+      // Intersection Observer for Scroll Reveals
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            
+            if (entry.target.classList.contains('module-panel') || entry.target.classList.contains('dashboard-main')) {
+              const staggers = entry.target.querySelectorAll('.stagger-child');
+              staggers.forEach((child, index) => {
+                child.style.transitionDelay = `${index * 80}ms`;
+                child.classList.add('active');
+              });
+              entry.target.classList.add('active');
+            } else if (entry.target.classList.contains('roadmap-panel')) {
+              entry.target.classList.add('active');
+              const steps = entry.target.querySelectorAll('.timeline-step');
+              steps.forEach((step, index) => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateY(16px)';
+                step.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                setTimeout(() => {
+                  step.style.opacity = '1';
+                  step.style.transform = 'translateY(0)';
+                }, 300 + (index * 150));
+              });
+              const footer = entry.target.querySelector('.roadmap-footer');
+              if (footer) {
+                footer.style.opacity = '0';
+                footer.style.transform = 'translateY(16px)';
+                footer.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                setTimeout(() => {
+                  footer.style.opacity = '1';
+                  footer.style.transform = 'translateY(0)';
+                }, 300 + (steps.length * 150));
+              }
+            } else {
+              entry.target.classList.add('active');
+            }
+            
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.08
+      });
+
+      document.querySelectorAll('.reveal:not(.hero-label):not(.hero-headline):not(.hero-subline):not(.hero-offer)').forEach(el => {
+        revealObserver.observe(el);
+      });
+
+      const waBtn = document.querySelector('.floating-wa');
+      window.addEventListener('scroll', () => {
+        if (window.innerWidth >= 768) {
+          if (window.scrollY > 300) {
+            waBtn.classList.add('visible');
+          } else {
+            waBtn.classList.remove('visible');
+          }
+        }
+      });
+      if (window.innerWidth < 768) {
+        waBtn.classList.add('visible');
+      }
+
+      // Dashboard Interactive Tilt
+      const mockupContainer = document.querySelector('.dashboard-wrapper');
+      const mockup = document.querySelector('.dashboard-mockup');
+      
+      if (mockupContainer && mockup) {
+        let isHovering = false;
+        
+        mockupContainer.addEventListener('mouseenter', () => {
+          if (window.innerWidth >= 768) {
+            isHovering = true;
+            mockup.style.transition = 'transform 0.1s ease';
+          }
+        });
+        
+        mockupContainer.addEventListener('mousemove', (e) => {
+          if (!isHovering) return;
+          
+          const rect = mockupContainer.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const xPercent = (x / rect.width) - 0.5; // -0.5 to 0.5
+          const yPercent = (y / rect.height) - 0.5; // -0.5 to 0.5
+          
+          const rotateX = -(yPercent * 16); // max +- 8 deg
+          const rotateY = (xPercent * 12);  // max +- 6 deg
+          
+          mockup.style.transform = `rotateX(${rotateX - 4}deg) rotateY(${rotateY + 6}deg)`;
+        });
+        
+        mockupContainer.addEventListener('mouseleave', () => {
+          if (window.innerWidth >= 768) {
+            isHovering = false;
+            mockup.style.transition = 'transform 0.6s ease';
+            mockup.style.transform = 'rotateX(-4deg) rotateY(6deg)';
+            
+            setTimeout(() => {
+              if (!isHovering) mockup.style.transition = '';
+            }, 600);
+          }
+        });
+      }
+ else if (window.scrollY > 300) {
+        waBtn.classList.add('visible');
+      }
+    });
+  </script>
+</body>
+</html>
